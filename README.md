@@ -3,7 +3,7 @@ Tienda online construida con HTML, bootstrap y vanillaJS. Esta tienda tiene como
 o más bien, buscar uno o más productos en específico.
 
 ### Tecnologias utilizadas
--HTML
--Bootstrap
--CSS
--Vanilla javascript
+- HTML
+- Bootstrap
+- CSS
+- Vanilla javascript
