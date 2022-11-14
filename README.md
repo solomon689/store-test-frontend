@@ -2,6 +2,9 @@
 Tienda online construida con HTML, bootstrap y vanillaJS. Esta tienda tiene como objetivo ofrecer diferentes tipos de comidas, dandole la facilidad al cliente de filtrarlos por sus categorias
 o más bien, buscar uno o más productos en específico.
 
+### Visitar sitio web
+https://store-test-frontend-teal.vercel.app/src/pages/index.html
+
 ### Tecnologias utilizadas
 Para la construcción de este proyecto se utilizaron tecnologías “puras”, es decir, sin frameworks a excepción de uno. Estas tecnologías son HTML, CSS, javascript y Bootstrap en su versión 5.2.2 para la rápida realización de componentes y clases CSS.
 
