@@ -59,6 +59,16 @@ export class CategoryMenuComponent extends HTMLElement {
                 });
             }
         }
+
+        // En caso de que se realice una busqueda se le quita la clase activa al item del menu de categorias.
+        window.addEventListener('popstate', (e) => {
+            const actualUrl = new URL(e.target.location.href);
+            const existCategoryParam = actualUrl.searchParams.has('category');
+
+            if (!existCategoryParam) {
+                document.querySelector('.list-group')?.querySelector('.active')?.classList.remove('active');
+            }
+        });
     }
 
     async #getCategories() {

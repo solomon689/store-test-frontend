@@ -93,6 +93,8 @@ class PaginationComponent extends HTMLElement {
         const actualUrl = new URL(window.location.href);
         const redirectUrl = new URL(window.location.origin + window.location.pathname);
         const paramKeys = actualUrl.searchParams.keys();
+        const total = this.getAttribute('totalItems');
+        const totalPages = Math.ceil(total / 9);
 
         if (itemNumber === '«') {
             for (const key of paramKeys) {
@@ -103,7 +105,8 @@ class PaginationComponent extends HTMLElement {
                 }
             }
             
-            page--;
+            if (page > 1) page--;
+        
             redirectUrl.searchParams.set('page', page);
             addActiveClass(page);
             addState(redirectUrl);
@@ -120,7 +123,8 @@ class PaginationComponent extends HTMLElement {
                 }
             }
 
-            page++;
+            if (page < totalPages) page++;
+
             redirectUrl.searchParams.set('page', page);
             addActiveClass(page);
             addState(redirectUrl);
