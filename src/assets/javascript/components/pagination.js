@@ -1,5 +1,7 @@
+import { addState } from "../helpers/manage-history-state.js";
+
 const actualUrl = new URL(window.location.href);
-const page = parseInt(actualUrl.searchParams.get('page')) || 1;
+let page = parseInt(actualUrl.searchParams.get('page')) || 1;
 
 class PaginationComponent extends HTMLElement {
     constructor() {
@@ -28,7 +30,7 @@ class PaginationComponent extends HTMLElement {
 
         previousLi.innerHTML = `<li class="page-item"></li>`;
         previousA.innerHTML = `
-            <a class="page-link" href="#" aria-label="Previous">
+            <a class="page-link" aria-label="Previous">
                 <span aria-hidden="true">&laquo;</span>
             </a>
         `;
@@ -51,7 +53,7 @@ class PaginationComponent extends HTMLElement {
 
         nextLi.innerHTML = `<li class="page-item"></li>`;
         nextA.innerHTML = `
-            <a class="page-link" href="#" aria-label="Next">
+            <a class="page-link" aria-label="Next">
                 <span aria-hidden="true">&raquo;</span>
             </a>
         `;
@@ -74,41 +76,76 @@ class PaginationComponent extends HTMLElement {
     }
 
     changePage(itemNumber) {
-        const guardParam = this.getAttribute('guard-param');
-        const guardParamValue = actualUrl.searchParams.get(guardParam);
+        const actualUrl = new URL(window.location.href);
+        const redirectUrl = new URL(window.location.origin + window.location.pathname);
+        const paramKeys = actualUrl.searchParams.keys();
+
+        // const guardParam = this.getAttribute('guard-param');
+        // const guardParamValue = actualUrl.searchParams.get(guardParam);
 
         if (itemNumber === '«') {
-            if (guardParam && guardParamValue) {
-                window.location.href = window.location.href.split('?')[0] 
-                    + `?${ guardParam }=${ guardParamValue }&page=${ page - 1 }`;
-                return;
-            }
+            // if (guardParam && guardParamValue) {
+            //     window.location.href = window.location.href.split('?')[0] 
+            //         + `?${ guardParam }=${ guardParamValue }&page=${ page - 1 }`;
+            //     return;
+            // }
 
-            window.location.href = window.location.href.split('?')[0] 
-                + `?page=${ page - 1 }`;
+            for (const key of paramKeys) {
+                if (key === 'page') continue;
+
+                if (actualUrl.searchParams.get(key)) {
+                    redirectUrl.searchParams.set(key, actualUrl.searchParams.get(key));
+                }
+            }
+            
+            page--;
+            redirectUrl.searchParams.set('page', page);
+            addState(redirectUrl);
+
+            // window.location.href = window.location.href.split('?')[0] 
+            //     + `?page=${ page - 1 }`;
             return;
         }
 
         if (itemNumber === '»') {
-            if (guardParam && guardParamValue) {
-                window.location.href = window.location.href.split('?')[0] 
-                    + `?${ guardParam }=${ guardParamValue }&page=${ page + 1 }`;
-                return;
+            // if (guardParam && guardParamValue) {
+            //     window.location.href = window.location.href.split('?')[0] 
+            //         + `?${ guardParam }=${ guardParamValue }&page=${ page + 1 }`;
+            //     return;
+            // }
+
+            for (const key of paramKeys) {
+                if (key === 'page') continue;
+
+                if (actualUrl.searchParams.get(key)) {
+                    redirectUrl.searchParams.set(key, actualUrl.searchParams.get(key));
+                }
             }
 
-            window.location.href = window.location.href.split('?')[0] 
-                + `?page=${ page + 1 }`;
+            page++;
+            redirectUrl.searchParams.set('page', page);
+            addState(redirectUrl);
+            
             return;
         }
 
-        if (guardParam && guardParamValue) {
-            window.location.href = window.location.href.split('?')[0] 
-                + `?${ guardParam }=${ guardParamValue }&page=${ itemNumber }`;
-            return;
-        }
+        // if (guardParam && guardParamValue) {
+        //     window.location.href = window.location.href.split('?')[0] 
+        //         + `?${ guardParam }=${ guardParamValue }&page=${ itemNumber }`;
+        //     return;
+        // }
 
-        window.location.href = window.location.href.split('?')[0] 
-            + `?page=${ itemNumber }`;
+        for (const key of paramKeys) {
+            if (key === 'page') continue;
+
+            if (actualUrl.searchParams.get(key)) {
+                redirectUrl.searchParams.set(key, actualUrl.searchParams.get(key));
+            }
+        }
+        
+        page = itemNumber;
+        redirectUrl.searchParams.set('page', page);
+        addState(redirectUrl);
     }
 }
 

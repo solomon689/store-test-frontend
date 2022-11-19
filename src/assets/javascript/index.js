@@ -97,10 +97,14 @@ const displaySpinner = () => spinner.classList.remove('visually-hidden');
 const removeSpinner = () => spinner.classList.add('visually-hidden');
 
 const displayPagination = (totalItems) => {
-    const pagination = document.createElement('app-pagination');
+    const paginationExist = document.querySelector('app-pagination');
 
-    pagination.setAttribute('totalItems', totalItems);
-    cardCol.appendChild(pagination);
+    if (!paginationExist) {
+        const pagination = document.createElement('app-pagination');
+
+        pagination.setAttribute('totalItems', totalItems);
+        cardCol.appendChild(pagination);
+    }
 };
 
 const removePagination = () => {
