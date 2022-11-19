@@ -1,8 +1,5 @@
 import { addState } from "../helpers/manage-history-state.js";
 
-const actualUrl = new URL(window.location.href);
-let page = parseInt(actualUrl.searchParams.get('page')) || 1;
-
 const addActiveClass = (page) => {
     const paginationList = document.querySelector('#pagination-list');
 
@@ -15,6 +12,22 @@ const addActiveClass = (page) => {
             return;
         }
     });
+}
+
+const createRedirectUrl = () => {
+    const actualUrl = new URL(window.location.href);
+    const paramKeys = actualUrl.searchParams.keys();
+    const redirectUrl = new URL(window.location.origin + window.location.pathname);
+
+    for (const key of paramKeys) {
+        if (key === 'page') continue;
+
+        if (actualUrl.searchParams.get(key)) {
+            redirectUrl.searchParams.set(key, actualUrl.searchParams.get(key));
+        }
+    }
+    
+    return redirectUrl;
 }
 
 class PaginationComponent extends HTMLElement {
@@ -36,7 +49,8 @@ class PaginationComponent extends HTMLElement {
         `;
         const total = this.getAttribute('totalItems');
         const totalPages = Math.ceil(total / 9);
-    
+        const page = parseInt(new URL(window.location.href).searchParams.get('page')) || 1;
+
         let previousLi = document.createElement('li');
         let previousA = document.createElement('a');
         let nextLi = document.createElement('li');
@@ -55,8 +69,10 @@ class PaginationComponent extends HTMLElement {
         for (let i = 0 ; i < totalPages ; i++) {
             let li = document.createElement('li');
             let a = document.createElement('a');
-            li.innerHTML =  `<li class="page-item"></li>`;
-            a.innerHTML = `<a class="page-link">${ i + 1 }</a>`;
+
+            li.classList.add('page-item');
+            a.classList.add('page-link');
+            a.innerText = i + 1;
 
             // Si la página actual coincide con el query param page se le asigna la clase active.
             if (page === (i + 1)) a.classList.add('active');
@@ -90,23 +106,15 @@ class PaginationComponent extends HTMLElement {
     }
 
     changePage(itemNumber) {
-        const actualUrl = new URL(window.location.href);
-        const redirectUrl = new URL(window.location.origin + window.location.pathname);
-        const paramKeys = actualUrl.searchParams.keys();
+        let redirectUrl; // Será inicializado como tipo URL.
+        let page = parseInt(new URL(window.location.href).searchParams.get('page')) || 1;
         const total = this.getAttribute('totalItems');
         const totalPages = Math.ceil(total / 9);
 
         if (itemNumber === '«') {
-            for (const key of paramKeys) {
-                if (key === 'page') continue;
-
-                if (actualUrl.searchParams.get(key)) {
-                    redirectUrl.searchParams.set(key, actualUrl.searchParams.get(key));
-                }
-            }
-            
             if (page > 1) page--;
-        
+            
+            redirectUrl = createRedirectUrl();
             redirectUrl.searchParams.set('page', page);
             addActiveClass(page);
             addState(redirectUrl);
@@ -115,35 +123,22 @@ class PaginationComponent extends HTMLElement {
         }
 
         if (itemNumber === '»') {
-            for (const key of paramKeys) {
-                if (key === 'page') continue;
-
-                if (actualUrl.searchParams.get(key)) {
-                    redirectUrl.searchParams.set(key, actualUrl.searchParams.get(key));
-                }
-            }
-
             if (page < totalPages) page++;
 
+            redirectUrl = createRedirectUrl();
             redirectUrl.searchParams.set('page', page);
             addActiveClass(page);
             addState(redirectUrl);
             
             return;
         }
-
-        for (const key of paramKeys) {
-            if (key === 'page') continue;
-
-            if (actualUrl.searchParams.get(key)) {
-                redirectUrl.searchParams.set(key, actualUrl.searchParams.get(key));
-            }
-        }
         
         page = itemNumber;
+        redirectUrl = createRedirectUrl();
         redirectUrl.searchParams.set('page', page);
         addActiveClass(page);
         addState(redirectUrl);
+
     }
 }
 
