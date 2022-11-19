@@ -1,4 +1,4 @@
-import { HttpRequest } from "../http-request.js";
+import { HttpRequest } from "../helpers/http-request.js";
 
 const httpRequest = new HttpRequest();
 const actualUrl = new URL(window.location.href);

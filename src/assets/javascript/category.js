@@ -1,6 +1,6 @@
 import { ProductCardComponent } from "./components/product-card.js";
 import { showErrorAlert, showInfoAlert } from "./helpers/alerts.js";
-import { HttpRequest } from "./http-request.js";
+import { HttpRequest } from "./helpers/http-request.js";
 
 // Declaración de variables
 let products = [];
@@ -26,6 +26,7 @@ window.addEventListener('popstate', async (e) => {
 
     try {
         if (existSearchParam) {
+            hideSearchDescription();
             removePagination();
             renderPage(newUrl);
 
@@ -52,6 +53,7 @@ const renderPage = async (actualUrl) => {
     products = data.data;
 
     removeSpinner();
+    showSearchDescription(search);
     displayPagination(data.totalItems);
     
     if (products && products.length > 0) {
@@ -96,6 +98,21 @@ const searchProducts = async (search, page = 1) => {
 
 const displaySpinner = () => spinner.classList.remove('visually-hidden');
 const removeSpinner = () => spinner.classList.add('visually-hidden');
+
+const showSearchDescription = (search) => {
+    if (search) {
+        const searchDescription = cardCol.querySelector('#search-description');
+
+        searchDescription.classList.remove('visually-hidden');
+        searchDescription.innerText = `Resultados de busqueda para "${ search }"`;
+    } else {
+        hideSearchDescription();
+    }
+}
+
+const hideSearchDescription = () => {
+    cardCol.querySelector('#search-description')?.classList.add('visually-hidden');
+}
 
 const displayPagination = (totalItems) => {
     const paginationExist = document.querySelector('app-pagination');
