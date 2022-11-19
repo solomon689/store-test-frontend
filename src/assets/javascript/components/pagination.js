@@ -3,6 +3,20 @@ import { addState } from "../helpers/manage-history-state.js";
 const actualUrl = new URL(window.location.href);
 let page = parseInt(actualUrl.searchParams.get('page')) || 1;
 
+const addActiveClass = (page) => {
+    const paginationList = document.querySelector('#pagination-list');
+
+    paginationList.querySelector('.active')?.classList.remove('active');
+
+    paginationList.querySelectorAll('.page-link')?.forEach(element => {
+        if (element.innerText == page) {
+            element.classList.add('active');
+
+            return;
+        }
+    });
+}
+
 class PaginationComponent extends HTMLElement {
     constructor() {
         super();
@@ -16,7 +30,7 @@ class PaginationComponent extends HTMLElement {
     render() {
         this.innerHTML = `
             <nav class="hidden" id="pagination-nav">
-                <ul class="pagination justify-content-end">
+                <ul class="pagination justify-content-end" id="pagination-list">
                 </ul>
             </nav>
         `;
@@ -80,16 +94,7 @@ class PaginationComponent extends HTMLElement {
         const redirectUrl = new URL(window.location.origin + window.location.pathname);
         const paramKeys = actualUrl.searchParams.keys();
 
-        // const guardParam = this.getAttribute('guard-param');
-        // const guardParamValue = actualUrl.searchParams.get(guardParam);
-
         if (itemNumber === '«') {
-            // if (guardParam && guardParamValue) {
-            //     window.location.href = window.location.href.split('?')[0] 
-            //         + `?${ guardParam }=${ guardParamValue }&page=${ page - 1 }`;
-            //     return;
-            // }
-
             for (const key of paramKeys) {
                 if (key === 'page') continue;
 
@@ -100,20 +105,13 @@ class PaginationComponent extends HTMLElement {
             
             page--;
             redirectUrl.searchParams.set('page', page);
+            addActiveClass(page);
             addState(redirectUrl);
 
-            // window.location.href = window.location.href.split('?')[0] 
-            //     + `?page=${ page - 1 }`;
             return;
         }
 
         if (itemNumber === '»') {
-            // if (guardParam && guardParamValue) {
-            //     window.location.href = window.location.href.split('?')[0] 
-            //         + `?${ guardParam }=${ guardParamValue }&page=${ page + 1 }`;
-            //     return;
-            // }
-
             for (const key of paramKeys) {
                 if (key === 'page') continue;
 
@@ -124,16 +122,11 @@ class PaginationComponent extends HTMLElement {
 
             page++;
             redirectUrl.searchParams.set('page', page);
+            addActiveClass(page);
             addState(redirectUrl);
             
             return;
         }
-
-        // if (guardParam && guardParamValue) {
-        //     window.location.href = window.location.href.split('?')[0] 
-        //         + `?${ guardParam }=${ guardParamValue }&page=${ itemNumber }`;
-        //     return;
-        // }
 
         for (const key of paramKeys) {
             if (key === 'page') continue;
@@ -145,6 +138,7 @@ class PaginationComponent extends HTMLElement {
         
         page = itemNumber;
         redirectUrl.searchParams.set('page', page);
+        addActiveClass(page);
         addState(redirectUrl);
     }
 }
