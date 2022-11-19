@@ -56,12 +56,10 @@ class PaginationComponent extends HTMLElement {
         let nextLi = document.createElement('li');
         let nextA = document.createElement('a');
 
-        previousLi.innerHTML = `<li class="page-item"></li>`;
-        previousA.innerHTML = `
-            <a class="page-link" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-            </a>
-        `;
+        previousLi.classList.add('page-item');
+        previousA.classList.add('page-link');
+        previousA.ariaLabel = 'Previous';
+        previousA.innerHTML = ` <span aria-hidden="true">&laquo;</span>`;
 
         previousLi.appendChild(previousA);
         document.querySelector('.pagination').appendChild(previousLi);
@@ -81,13 +79,12 @@ class PaginationComponent extends HTMLElement {
             document.querySelector('.pagination').appendChild(li);
         }
 
-        nextLi.innerHTML = `<li class="page-item"></li>`;
-        nextA.innerHTML = `
-            <a class="page-link" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-            </a>
-        `;
+        nextLi.classList.add('page-item');
+        nextA.classList.add('page-link');
+        nextA.ariaLabel = 'Next';
+        nextA.innerHTML = `<span aria-hidden="true">&raquo;</span>`;
         nextLi.appendChild(nextA);
+        
         document.querySelector('.pagination').appendChild(nextLi);
     }
 

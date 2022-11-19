@@ -2,7 +2,7 @@ export class HttpRequest {
     #url;
     
     constructor() {
-        this.#url = 'http://localhost:3000/api';
+        this.#url = 'https://bsale-backend-test.onrender.com/api';
         this.headers = {
             'Content-Type': 'application/json',
         }
